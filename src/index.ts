@@ -2,11 +2,14 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import client from './mongodb.js'
+import { executeGraphQL } from './graphql.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
+
+app.use(express.json())
 
 // Home route - HTML
 app.get('/', (req, res) => {
@@ -45,14 +48,12 @@ app.get('/api-data', (req, res) => {
   })
 })
 
-app.get('/contas', (req, res) => {
-  client.db('funcional').collection('contas').find({}).toArray().then(contas => {
-    res.json(contas)
-  }).catch(err => {
-    res.status(500).json({ error: 'Failed to fetch contas' })
-  })
-})
-
+// GraphQL da tarefa aqui.
+app.post('/graphql', (req, res) => {
+  // Handle GraphQL requests here
+  const { query, variables } = req.body
+  executeGraphQL(query, variables).then(result => res.json(result))
+});
 
 // Health check
 app.get('/healthz', (req, res) => {
