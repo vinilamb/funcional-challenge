@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import client from './mongodb.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -43,6 +44,15 @@ app.get('/api-data', (req, res) => {
     items: ['apple', 'banana', 'cherry'],
   })
 })
+
+app.get('/contas', (req, res) => {
+  client.db('funcional').collection('contas').find({}).toArray().then(contas => {
+    res.json(contas)
+  }).catch(err => {
+    res.status(500).json({ error: 'Failed to fetch contas' })
+  })
+})
+
 
 // Health check
 app.get('/healthz', (req, res) => {
