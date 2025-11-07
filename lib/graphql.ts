@@ -23,11 +23,11 @@ const CONTEXT = {
         return client.db('funcional').collection('contas').find({}).toArray()
     },
 
-    saldo({ numero }) {
+    saldo({ numero } : { numero: number}) {
         return client.db('funcional').collection('contas').findOne({ numero }).then(conta => conta ? conta.saldo : null)
     },
 
-    async sacar({ numero, valor }) {
+    async sacar({ numero, valor } : { numero: number, valor: number}) {
         const conta = await client.db('funcional').collection('contas').findOne({ numero });
         if (!conta) throw new Error('Conta não encontrada');
         if (conta.saldo < valor) throw new Error('Saldo insuficiente');
@@ -36,7 +36,7 @@ const CONTEXT = {
         return { numero, saldo: novoSaldo };
     },
 
-    async depositar({ numero, valor }) {
+    async depositar({ numero, valor } : { numero: number, valor: number}) {
         const conta = await client.db('funcional').collection('contas').findOne({ numero });
         if (!conta) throw new Error('Conta não encontrada');
         const novoSaldo = conta.saldo + valor;
