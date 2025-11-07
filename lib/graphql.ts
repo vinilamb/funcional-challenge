@@ -1,5 +1,5 @@
 import { graphql, buildSchema } from "graphql";
-import client from "./mongodb.js";
+import client from "./mongodb";
 
 const SCHEMA = buildSchema(`
 type Query {
